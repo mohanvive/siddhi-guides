@@ -1,15 +1,15 @@
 Generating Alerts Based on Static and Dynamic Thresholds
 ===========================================================
 
-In this guide, we are going to understand one of the common requirements of a Stream Processing which is generating 
+In this guide, we will try to understand one of the common requirements of a Stream Processing that is generating 
 alerts based on static and dynamic thresholds. To understand this requirement, let’s consider the throttling use case 
 in an API management solutions. 
 
 # Scenario - Throttling for API Requests
-Throttling became as one of the unavoidable needs with the evolution of  APIs and API management. Throttling is a 
+Throttling has became one of the unavoidable needs with the evolution of APIs and API management. Throttling is a 
 process that is used to control the usage of APIs by consumers during a given period. 
 
-The following sections are available in this guide.
+The following sections are covered in this guide.
 
 * [What you'll build](#what-youll-build)
 * [Prerequisites](#prerequisites)
