@@ -1,7 +1,7 @@
 Generating Alerts Based on Static and Dynamic Thresholds
 ===========================================================
 
-In this guide, we are going to understand one of the common requirements of a Stream Processing which is generating 
+In this guide, you are going to understand one of the common requirements of a Stream Processing which is generating 
 alerts based on static and dynamic thresholds. To understand this requirement, let’s consider the throttling use case 
 in an API management solutions. 
 
@@ -20,7 +20,7 @@ The following sections are available in this guide.
 
 ## What you'll build
 
-We are going to consider a real work use case to implement the throttling requirement. This will help you to 
+Let's consider a real world use case to implement the throttling requirement. This will help you to 
 understand some Siddhi Stream Processing constructs such as windows, aggregations, source and etc… Let’s jump in 
 to the use case directly.
 
@@ -172,7 +172,7 @@ java -jar logservice-1.0.0.jar
 ### Invoking the Service
 
 As mentioned in the previous steps, there is a service running in Siddhi side which is listening
-for events related to API requests. As per the Siddhi query that we wrote in the
+for events related to API requests. As per the Siddhi query that you wrote in the
 ‘Implementation’ section, respective service can be accessed via
 `http://localhost:9090/ThotttleService` .
 As per the app, the API request will get throttled if there is more than 10 requests by the same
@@ -184,7 +184,7 @@ curl -v -X POST -d '{ "event": { "apiName": "order-mgt-v1", "version": "1.0.0", 
 
 If you invoke, above cURL request for more than 10 times within a minute then Siddhi start
 throttling the request and send an alert to a service in the API Manager. In this guide, for the
-simplicity purpose we are just logging the alert as below.
+simplicity purpose you can just log the alert as below.
 
 ````
 INFO {io.siddhi.core.stream.output.sink.LogSink} - API-Request-Throttler :
@@ -236,7 +236,7 @@ Please configure LOGGER_SERVICE_HOST environment property to point the host wher
 
         curl -v -X POST -d '{ "event": { "apiName": "order-mgt-v1", "version": "1.0.0", "tier": "silver", "user":"mohan", "userEmail":"mohan@wso2.com"}}' "http://localhost:8006/apiRequestStream" -H "Content-Type:application/json"
 
-6. We can see the output log in the console as shown below. You could see there is an alert log printed as shown in the below image.
+6. You can see the output log in the console as shown below. You could see there is an alert log printed as shown in the below image.
 
      ![console_output_vm](images/console-output-vm.png "Console output")
 
@@ -278,7 +278,7 @@ Please configure LOGGER_SERVICE_HOST environment property to point the host wher
         curl -v -X POST -d '{ "event": { "apiName": "order-mgt-v1", "version": "1.0.0", "tier": "silver", "user":"mohan", "userEmail":"mohan@wso2.com"}}' "http://localhost:8006/apiRequestStream" -H "Content-Type:application/json"
     ````
         
-6. Since, we have started the docker in interactive mode you can see the output in the console as below. 
+6. Since, you have started the docker in interactive mode you can see the output in the console as below. 
 (If it is not started in the interactive mode then you can use `docker exec -it  <docker-container-id> sh` command, 
 go in to the container and check the log file in `home/siddhi_user/siddhi-runner/wso2/runner/logs/carbon.log` file)
 
@@ -311,10 +311,10 @@ which is used to demonstrate the capability of SIddhi HTTP sink. Execute below c
     ````
     
 3. Siddhi applications can be deployed on Kubernetes using the Siddhi operator.
-    - We have to define an [Ingress](https://kubernetes.github.io/ingress-nginx/deploy/#provider-specific-steps) since 
-    there is an http endpoint in the Siddhi app which we will be sending events to that
+    - You have to define an [Ingress](https://kubernetes.github.io/ingress-nginx/deploy/#provider-specific-steps) since 
+    there is an http endpoint in the Siddhi app which you will be sending events to that
 
-    - To deploy the above created Siddhi app, we have to create custom resource object yaml file (with the kind as SiddhiProcess) as given below
+    - To deploy the above created Siddhi app, you have to create custom resource object yaml file (with the kind as SiddhiProcess) as given below
     
         ````
         apiVersion: siddhi.io/v1alpha2
@@ -441,7 +441,7 @@ which is used to demonstrate the capability of SIddhi HTTP sink. Execute below c
         curl -v -X POST -d '{ "event": { "apiName": "order-mgt-v1", "version": "1.0.0", "tier": "silver", "user":"mohan", "userEmail":"mohan@wso2.com"}}' "http://siddhi/api-throttler-app-0/8006/apiRequestStream" -H "Content-Type:application/json"
         ````
           
-    - Then, we could see the throttle decisions as console logs (as given below).
+    - Then, you could see the throttle decisions as console logs (as given below).
     
         ![console_output_kubernetes](images/console-output-kubernetes.png "Console output")
     
