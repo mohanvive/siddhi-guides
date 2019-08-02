@@ -15,8 +15,7 @@ The following sections are available in this guide.
 * [Prerequisites](#prerequisites)
 * [Implementation](#implementation)
 * [Testing](#testing)
-* [Deployment](#deployment)
-* [Output](#output)
+* [Deployment & Output](#deployment)
 
 ## What you'll build
 
