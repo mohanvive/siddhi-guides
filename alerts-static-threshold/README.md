@@ -418,7 +418,7 @@ which is used to demonstrate the capability of SIddhi HTTP sink. Execute below c
     - Then, add the host siddhi and related external IP (ADDRESS) to the /etc/hosts file in your
     machine. In this case, external IP is `0.0.0.0`.
     
-    - You can can find the alert logs in the siddhi runner log file. To see the Siddhi runner log file, you can invoke below command.
+    - You can find the alert logs in the siddhi runner log file. To see the Siddhi runner log file, you can invoke below command.
         
         ````
         kubectl get pods
