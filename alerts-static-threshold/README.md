@@ -299,7 +299,6 @@ which is used to demonstrate the capability of Siddhi HTTP sink. Execute the bel
     ````
         java -jar logservice-1.0.0.jar
     ````
-**@mohan shouldn't we need to run this in k8s?**
     
 3. Siddhi applications can be deployed on Kubernetes using the Siddhi operator.
     - Before deploying the apps you have to define an [Ingress](https://kubernetes.github.io/ingress-nginx/deploy/#provider-specific-steps), this is because there is an HTTP endpoint in the Siddhi app you have written and you will be sending events to that.
