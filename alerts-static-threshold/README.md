@@ -58,7 +58,13 @@ When a subscriber made an API call to `order-mgt-v1` API it sends an event with 
 
 1. Start the Siddhi [tolling](https://siddhi.io/en/v5.0/docs/tooling/) runtime and go to the editor UI in http://localhost:9390/editor 
 
-**@mohan how to start in linix and windows**
+    Follow below steps to start the Siddhi tooling runtime.
+    * Extract the downloaded zip and navigate to <TOOLING_HOME>/bin. (TOOLING_HOME refers to the extracted folder) 
+    * Issue the following command in the command prompt (Windows) / terminal (Linux/Mac)
+        ````
+        For Windows: tooling.bat
+        For Linux/Mac: ./tooling.sh
+        ````
 
 2. Select File -> New option, then you could either use the source view or design view to write/build the Siddhi Application. You can find the Siddhi Application bellow, that implements the requirements mentioned above.
 
@@ -139,9 +145,12 @@ Below is the flow diagram of the above Siddhi App.
 
 ## Testing
 
-NOTE: In the provided Siddhi app, there are some environmental variables (EMAIL_PASSWORD, EMAIL_USERNAME, SENDER_EMAIL_ADDRESS, and LOGGER_SERVICE_HOST) used which are required to be set to send an email alert based on the Siddhi queries defined.
-
-**@mohan Add some info on configuring the env properties.**
+NOTE: In the provided Siddhi app, there are some environmental variables (EMAIL_PASSWORD, EMAIL_USERNAME, and SENDER_EMAIL_ADDRESS) used which are required to be set to send an email alert based on the Siddhi queries defined. Again, there is a mock service configured to receive the throttle decisions, and its host is configured via LOGGER_SERVICE_HOST environment property. Hence, make sure to set the environmental variables with the proper values in the system
+        
+ * EMAIL_USERNAME: Username of the email account which used to send email alerts. (eg: 'siddhi.gke.user')
+ * EMAIL_PASSWORD: Password of the email account which used to send email alerts. (eg: 'siddhi123')
+ * SENDER_EMAIL_ADDRESS: Email address of the account used to send email alerts. (eg: 'siddhi.gke.user@gmail.com')
+ * LOGGER_SERVICE_HOST: IP address of the host where logger service is running. (eg: 'localhost')
 
 When you run the Siddhi app in the editor, you will see below logs getting printed in the editor console.
 
@@ -165,7 +174,7 @@ As per the Siddhi app that you wrote in the 'Implementation' section, there is a
 As per the app, the API request will get throttled if there are more than 10 requests by the same user, to the same API (for 'silver’ tier).
 
 ````
-curl -v -X POST -d '{ "event": { "apiName": "order-mgt-v1", "version": "1.0.0", "tier":"silver","user":"mohan", "userEmail":"mohan@wso2.com"}}' "http://localhost:8006/apiRequest" -H "Content-Type:application/json"
+curl -v -X POST -d '{ "event": { "apiName": "order-mgt-v1", "version": "1.0.0", "tier":"silver","user":"mohan", "userEmail":"example@wso2.com"}}' "http://localhost:8006/apiRequest" -H "Content-Type:application/json"
 ````
 
 If you invoke the above cURL request for more than 10 times within a minute, then Siddhi starts throttling the request, and sends an alert to the API Manager (logservice), while logging the alert as below.
@@ -198,9 +207,9 @@ You can deploy the Siddhi app using any of the methods listed below.
 2. Unzip the `siddhi-runner-x.x.x.zip`.
 3. Configure the necessary environmental variables
 
-   In the above provided Siddhi app, there are some environmental variables (EMAIL_PASSWORD, EMAIL_USERNAME, and SENDER_EMAIL_ADDRESS) which are required to be set to send email alerts based on the Siddhi queries defined. Again, there is a mock service configured to receive the throttle decisions (instructions given below), and its host is configured via LOGGER_SERVICE_HOST environment property. 
-    Hence, make sure to set the environmental variables with the proper values in the system.  
-
+   In the above provided Siddhi app, there are some environmental variables (EMAIL_USERNAME, EMAIL_PASSWORD, and SENDER_EMAIL_ADDRESS) which are required to be set to send email alerts based on the Siddhi queries defined. Again, there is a mock service configured to receive the throttle decisions (instructions given below), and its host is configured via LOGGER_SERVICE_HOST environment property. 
+    Hence, make sure to set the environmental variables with the proper values in the system (make sure to follow necessary steps based on the underneath operating system).  
+    
 4. Start Siddhi app with the runner config by executing the following commands from the distribution directory.
         
      ```
@@ -215,11 +224,9 @@ You can deploy the Siddhi app using any of the methods listed below.
 
 	    java -jar logservice-1.0.0.jar
 
-6. Invoke the apiRequest service with the following cURL request for more than 10 times within a minute time period.
+6. Invoke the apiRequest service with the following cURL request for more than 10 times within a minute time period. Please make sure to change the `userEmail` property value to an email address that you could use to test the email alerting purposes.
 
-        curl -v -X POST -d '{ "event": { "apiName": "order-mgt-v1", "version": "1.0.0", "tier": "silver", "user":"mohan", "userEmail":"mohan@wso2.com"}}' "http://localhost:8006/apiRequest" -H "Content-Type:application/json"
-
-**@mohan dont have mohan@wso2.com email id and some other for the example**
+        curl -v -X POST -d '{ "event": { "apiName": "order-mgt-v1", "version": "1.0.0", "tier": "silver", "user":"mohan", "userEmail":"example@wso2.com"}}' "http://localhost:8006/apiRequest" -H "Content-Type:application/json"
 
 7. You can see the output log in the console. Here, you will be able to see the alert log printed as shown below.
 
@@ -229,7 +236,7 @@ You can deploy the Siddhi app using any of the methods listed below.
 
       ![mock_service_output_vm](images/mock-service-output-vm.png "Mock service output")
 
-###Deploy on Docker
+### Deploy on Docker
 
 1. Create a folder locally on your host machine (eg: `/home/siddhi-apps`) and copy the Siddhi app into it.
 
@@ -254,10 +261,10 @@ You can deploy the Siddhi app using any of the methods listed below.
 	    java -jar logservice-1.0.0.jar
 	````
 
-5. Invoke the apiRequest service with the following cURL request for more than 10 times within a minute time period.
+5. Invoke the apiRequest service with the following cURL request for more than 10 times within a minute time period. Please make sure to change the `userEmail` property value to an email address that you could use to test the email alerting purposes.
 
     ````
-        curl -v -X POST -d '{ "event": { "apiName": "order-mgt-v1", "version": "1.0.0", "tier": "silver", "user":"mohan", "userEmail":"mohan@wso2.com"}}' "http://localhost:8006/apiRequest" -H "Content-Type:application/json"
+        curl -v -X POST -d '{ "event": { "apiName": "order-mgt-v1", "version": "1.0.0", "tier": "silver", "user":"mohan", "userEmail":"example@wso2.com"}}' "http://localhost:8006/apiRequest" -H "Content-Type:application/json"
     ````
         
 6. Since you have started the docker in interactive mode you can see the output in its console as below. 
@@ -268,9 +275,11 @@ You can deploy the Siddhi app using any of the methods listed below.
 7. At the same time, you could also see the events received to HTTP mock service endpoint (started in step #4) via its log as below.
 
     ![mock_service_output_docker](images/mock-service-output-docker.png "Mock service output")
+    
+8. If there are more than 10 requests get throttled within 1 hour then the API invoker will receive an email (as shown in the 'Testing' section).
 
 
-### Deploying on Kubernetes
+### Deploy on Kubernetes
 1. Install Siddhi Operator
     - To install the Siddhi Kubernetes operator run the following commands.
         
@@ -394,9 +403,7 @@ which is used to demonstrate the capability of Siddhi HTTP sink. Execute the bel
         
         ![kubernetes_output](images/kubernetes-output.png "Kubectl console outputs")
         
-    - Then, add the host siddhi and related external IP (ADDRESS) to the `/etc/hosts` file in your machine. In this case, external IP is `0.0.0.0`.
-    
-    **@mohan check on host siddhi**
+    - Then, add the host `siddhi` and related external IP (ADDRESS) to the `/etc/hosts` file in your machine. For Docker for Mac , external IP is `0.0.0.0`. For Minikube, you have to use Minikube IP as the external IP. Hence, run minikube ip command to get the IP of the Minikube cluster.
     
     - You can find the alert logs in the Siddhi runner log file. To see the Siddhi runner log file, first, invoke below command to get the pods.
         
@@ -414,10 +421,10 @@ which is used to demonstrate the capability of Siddhi HTTP sink. Execute the bel
             
          ![kubernetes_get_pods](images/kubernetes-get-pods.png "`Kubectl get pods` command output ")
 
-    - Invoke the apiRequest service with below cURL request for more than 10 times within a minute.
+    - Invoke the apiRequest service with below cURL request for more than 10 times within a minute. Please make sure to change the `userEmail` property value to an email address that you could use to test the email alerting purposes.
       
         ````
-        curl -v -X POST -d '{ "event": { "apiName": "order-mgt-v1", "version": "1.0.0", "tier": "silver", "user":"mohan", "userEmail":"mohan@wso2.com"}}' "http://siddhi/api-throttler-app-0/8006/apiRequest" -H "Content-Type:application/json"
+        curl -v -X POST -d '{ "event": { "apiName": "order-mgt-v1", "version": "1.0.0", "tier": "silver", "user":"mohan", "userEmail":"example@wso2.com"}}' "http://siddhi/api-throttler-app-0/8006/apiRequest" -H "Content-Type:application/json"
         ````
           
     - Then, you will be able to see the throttle decisions as console logs (as given below).
@@ -428,8 +435,7 @@ which is used to demonstrate the capability of Siddhi HTTP sink. Execute the bel
     
         ![mock_service_output_kubernetes](images/mock-service-output-kubernetes.png "Mock service output")
    
+    - If there are more than 10 requests get throttled within 1 hour then the API invoker will receive an email (as shown in the 'Testing' section).
     
    NOTE: Refer more details in https://siddhi.io/en/v5.1/docs/siddhi-as-a-kubernetes-microservice/ 
    
-   **@mohan add email info for all the deployments E.g send x times etc and then ask them to check the mail**
-
