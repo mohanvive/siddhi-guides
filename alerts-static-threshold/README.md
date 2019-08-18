@@ -20,7 +20,7 @@ Let's consider a real world use case to implement the throttling requirement. Th
 
 Let's assume that you are an API developer and you have published a few APIs to the API store and there are subscribers who have subscribed to these APIs in different tiers which are categorized based on the number of requests per min/sec. If any subscriber is consuming an API more than the allowed quota within a time frame then that specific user will be throttled until that time frame passes. Also if a subscriber is getting throttled often then the system sends a notification to that user requesting to upgrade the tier.
 
-For example, let’s assume that user “John” has subscribed to an API with the tier 'Silver'; silver tier allows a user to make 10 API requests per minute. If John, made more than 10 requests within a minute then his subsequent requests get throttled until the end of the minute, and if he has got throttled more than 10 times in an hour, then he will be notified to upgrade his tier via email.
+For example, let’s assume that user “John” has subscribed to an API with the tier 'Silver'; silver tier allows a user to make 10 API requests per minute. If John, made more than 10 requests within a minute then his subsequent requests get throttled until the end of the minute, and if he has get throttled more than 10 times in an hour, then he will be notified to upgrade his tier via email.
 
 ![Throttling_Scenario](images/throttling-scenario.png "Throttling Scenario")
 
@@ -51,7 +51,7 @@ When a subscriber made an API call to `order-mgt-v1` API it sends an event with 
 * Siddhi runtime, keep track of each API request and make decisions to throttle subscribers. 
 * Again, once the corresponding time frame passed Siddhi release those throttle users. 
 * Throttling decisions are informed to API management solution through an API call.
-* If a subscriber is getting throttled more than 10 times in an hour then sends a notification mail to that user requesting to upgrade the tier.
+* If a subscriber is getting throttled more than 10 times in an hour then sends a notification mail once every 15 minutes to that user requesting to upgrade the tier.
 
 
 ### Implement Streaming Queries
@@ -110,14 +110,14 @@ define stream UserNotificationStream (user string, apiName string, version strin
 from APIRequestStream[tier == "silver"]#window.timeBatch(1 min, 0, true) 
 select apiName, version, user, tier, userEmail, count() as totalRequestCount 
        group by apiName, version, user 
-       having totalRequestCount > 10 or totalRequestCount == 0 
+       having totalRequestCount == 10 or totalRequestCount == 0 
 insert all events into ThrottledStream;
 
 @info(name = 'Query to find users who needs to be throttled based on tier `gold`')
 from APIRequestStream[tier == "gold"]#window.timeBatch(1 min, 0, true) 
 select apiName, version, user, tier, userEmail, count() as totalRequestCount 
        group by apiName, version, user 
-       having totalRequestCount > 100 or totalRequestCount == 0 
+       having totalRequestCount == 100 or totalRequestCount == 0 
 insert all events into ThrottledStream;
 
 @info(name = 'Query to add a flag for throttled request')
@@ -348,14 +348,14 @@ which is used to demonstrate the capability of Siddhi HTTP sink. Execute the bel
                 from APIRequestStream[tier == "silver"]#window.timeBatch(1 min, 0, true) 
                 select apiName, version, user, tier, userEmail, count() as totalRequestCount 
                     group by apiName, version, user 
-                    having totalRequestCount > 10 or totalRequestCount == 0 
+                    having totalRequestCount == 10 or totalRequestCount == 0 
                 insert all events into ThrottledStream;
         
                 @info(name = 'Query to find users who needs to be throttled based on tier `gold`')
                 from APIRequestStream[tier == "gold"]#window.timeBatch(1 min, 0, true) 
                 select apiName, version, user, tier, userEmail, count() as totalRequestCount 
                     group by apiName, version, user 
-                    having totalRequestCount > 100 or totalRequestCount == 0 
+                    having totalRequestCount == 100 or totalRequestCount == 0 
                 insert all events into ThrottledStream;
         
                 @info(name = 'Query to add a flag for throttled request')
