@@ -51,7 +51,7 @@ When a subscriber made an API call to `order-mgt-v1` API it sends an event with 
 * Siddhi runtime, keep track of each API request and make decisions to throttle subscribers. 
 * Again, once the corresponding time frame passed Siddhi release those throttle users. 
 * Throttling decisions are informed to API management solution through an API call.
-* If a subscriber is getting throttled more than 10 times in an hour then sends a notification mail to that user requesting to upgrade the tier.
+* If a subscriber is getting throttled more than 10 times in an hour then sends a notification mail once every 15 minutes to that user requesting to upgrade the tier.
 
 
 ### Implement Streaming Queries
@@ -110,14 +110,14 @@ define stream UserNotificationStream (user string, apiName string, version strin
 from APIRequestStream[tier == "silver"]#window.timeBatch(1 min, 0, true) 
 select apiName, version, user, tier, userEmail, count() as totalRequestCount 
        group by apiName, version, user 
-       having totalRequestCount > 10 or totalRequestCount == 0 
+       having totalRequestCount == 10 or totalRequestCount == 0 
 insert all events into ThrottledStream;
 
 @info(name = 'Query to find users who needs to be throttled based on tier `gold`')
 from APIRequestStream[tier == "gold"]#window.timeBatch(1 min, 0, true) 
 select apiName, version, user, tier, userEmail, count() as totalRequestCount 
        group by apiName, version, user 
-       having totalRequestCount > 100 or totalRequestCount == 0 
+       having totalRequestCount == 100 or totalRequestCount == 0 
 insert all events into ThrottledStream;
 
 @info(name = 'Query to add a flag for throttled request')
@@ -348,14 +348,14 @@ which is used to demonstrate the capability of Siddhi HTTP sink. Execute the bel
                 from APIRequestStream[tier == "silver"]#window.timeBatch(1 min, 0, true) 
                 select apiName, version, user, tier, userEmail, count() as totalRequestCount 
                     group by apiName, version, user 
-                    having totalRequestCount > 10 or totalRequestCount == 0 
+                    having totalRequestCount == 10 or totalRequestCount == 0 
                 insert all events into ThrottledStream;
         
                 @info(name = 'Query to find users who needs to be throttled based on tier `gold`')
                 from APIRequestStream[tier == "gold"]#window.timeBatch(1 min, 0, true) 
                 select apiName, version, user, tier, userEmail, count() as totalRequestCount 
                     group by apiName, version, user 
-                    having totalRequestCount > 100 or totalRequestCount == 0 
+                    having totalRequestCount == 100 or totalRequestCount == 0 
                 insert all events into ThrottledStream;
         
                 @info(name = 'Query to add a flag for throttled request')
